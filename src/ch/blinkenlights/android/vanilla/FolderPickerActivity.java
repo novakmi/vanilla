@@ -18,6 +18,7 @@
 package ch.blinkenlights.android.vanilla;
 
 import java.util.Arrays;
+import java.util.ArrayList;
 import java.io.File;
 import android.app.Activity;
 import android.os.Bundle;
@@ -33,7 +34,8 @@ import android.widget.Toast;
 import com.mobeta.android.dslv.DragSortListView;
 
 public abstract class FolderPickerActivity extends Activity
-	implements AdapterView.OnItemClickListener
+	implements AdapterView.OnItemClickListener,
+	           AdapterView.OnItemLongClickListener
 {
 
 	/**
@@ -57,12 +59,15 @@ public abstract class FolderPickerActivity extends Activity
 	 */
 	private FolderPickerAdapter mListAdapter;
 
+	private boolean mTritastic;
+	private ArrayList<String> mIncludedDirs;
+	private ArrayList<String> mExcludedDirs;
+
 	@Override  
 	public void onCreate(Bundle savedInstanceState) {
 		ThemeHelper.setTheme(this, R.style.BackActionBar);
 		super.onCreate(savedInstanceState);
 
-		setTitle(R.string.filebrowser_start);
 		setContentView(R.layout.filebrowser_content);
 
 		mCurrentPath = new File("/");
@@ -78,6 +83,8 @@ public abstract class FolderPickerActivity extends Activity
 			public void onClick(View v) {
 				onFolderSelected(mCurrentPath);
 			}});
+		// init defaults
+		enableTritasticSelect(false, null, null);
 	}
 
 	/**
@@ -86,6 +93,15 @@ public abstract class FolderPickerActivity extends Activity
 	 * @param directory the selected directory
 	 */
 	public abstract void onFolderSelected(File directory);
+
+	public void enableTritasticSelect(boolean enabled, ArrayList<String> included, ArrayList<String> excluded) {
+		mTritastic = enabled;
+		mIncludedDirs = included;
+		mExcludedDirs = excluded;
+
+		mListView.setOnItemLongClickListener(enabled ? this : null);
+		mSaveButton.setText(enabled ? R.string.save : R.string.select);
+	}
 
 	/**
 	 * Jumps to given directory
@@ -131,18 +147,23 @@ public abstract class FolderPickerActivity extends Activity
 	 */
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int pos, long id) {
-		String dirent = mListAdapter.getItem(pos);
+		FolderPickerAdapter.Item item = mListAdapter.getItem(pos);
 		File newPath = null;
 
 		if(pos == 0) {
 			newPath = mCurrentPath.getParentFile();
 		}
 		else {
-			newPath = new File(mCurrentPath, dirent);
+			newPath = new File(mCurrentPath, item.name);
 		}
 
 		if (newPath != null)
 			setCurrentDirectory(newPath);
+	}
+
+	@Override
+	public boolean onItemLongClick(AdapterView<?> parent, View view, int pos, long id) {
+		return true;
 	}
 
 	/**
@@ -153,13 +174,21 @@ public abstract class FolderPickerActivity extends Activity
 		File[]dirs = path.listFiles();
 		
 		mListAdapter.clear();
-		mListAdapter.add("../");
+		mListAdapter.add(new FolderPickerAdapter.Item("../", 0));
 		
 		if(dirs != null) {
 			Arrays.sort(dirs);
 			for(File fentry: dirs) {
 				if(fentry.isDirectory()) {
-					mListAdapter.add(fentry.getName());
+					int color = 0;
+					if (mTritastic) {
+						if (mIncludedDirs.contains(fentry.getAbsolutePath()))
+							color = 0xff88cece;
+						if (mExcludedDirs.contains(fentry.getAbsolutePath()))
+							color = 0xffce88ce;
+					}
+					FolderPickerAdapter.Item item = new FolderPickerAdapter.Item(fentry.getName(), color);
+					mListAdapter.add(item);
 				}
 			}
 		}

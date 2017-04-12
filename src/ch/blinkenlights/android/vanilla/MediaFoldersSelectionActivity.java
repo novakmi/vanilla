@@ -17,34 +17,34 @@
 
 package ch.blinkenlights.android.vanilla;
 
+import ch.blinkenlights.android.medialibrary.MediaLibrary;
+
 import android.app.Activity;
 import android.os.Bundle;
 import android.content.SharedPreferences;
 
 import java.io.File;
 
-public class FilebrowserStartActivity extends FolderPickerActivity {
+public class MediaFoldersSelectionActivity extends FolderPickerActivity {
 
 	private SharedPreferences.Editor mPrefEditor;
 
 	@Override  
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setTitle(R.string.filebrowser_start);
+		setTitle(R.string.media_folders_header);
 
-		mPrefEditor = PlaybackService.getSettings(this).edit();
+		MediaLibrary.Preferences prefs = MediaLibrary.getPreferences(this);
+		File startPath = FileUtils.getFilesystemBrowseStart(this);
 
 		// Make sure that we display the current selection
-		File startPath = FileUtils.getFilesystemBrowseStart(this);
 		setCurrentDirectory(startPath);
+		enableTritasticSelect(true, prefs.mediaFolders, prefs.blacklistedFolders);
 	}
 
 
 	@Override
 	public void onFolderSelected(File directory) {
-		mPrefEditor.putString(PrefKeys.FILESYSTEM_BROWSE_START, directory.getAbsolutePath());
-		mPrefEditor.commit();
-		finish();
 	}
 
 }

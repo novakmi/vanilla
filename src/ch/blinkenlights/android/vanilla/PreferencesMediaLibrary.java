@@ -23,6 +23,7 @@ import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -49,6 +50,10 @@ public class PreferencesMediaLibrary extends Fragment implements View.OnClickLis
 	 * The cancel button
 	 */
 	private View mCancelButton;
+	/**
+	 * The edit-media-folders button
+	 */
+	private View mEditButton;
 	/**
 	 * The debug / progress text describing the scan status
 	 */
@@ -101,6 +106,7 @@ public class PreferencesMediaLibrary extends Fragment implements View.OnClickLis
 
 		mStartButton = (View)view.findViewById(R.id.start_button);
 		mCancelButton = (View)view.findViewById(R.id.cancel_button);
+		mEditButton = (View)view.findViewById(R.id.edit_button);
 		mProgressText = (TextView)view.findViewById(R.id.media_stats_progress_text);
 		mProgressBar = (ProgressBar)view.findViewById(R.id.media_stats_progress_bar);
 		mStatsTracks = (TextView)view.findViewById(R.id.media_stats_tracks);
@@ -114,6 +120,7 @@ public class PreferencesMediaLibrary extends Fragment implements View.OnClickLis
 		// Bind onClickListener to some elements
 		mStartButton.setOnClickListener(this);
 		mCancelButton.setOnClickListener(this);
+		mEditButton.setOnClickListener(this);
 		mGroupAlbumsCheck.setOnClickListener(this);
 		mForceBastpCheck.setOnClickListener(this);
 	}
@@ -159,6 +166,9 @@ public class PreferencesMediaLibrary extends Fragment implements View.OnClickLis
 				break;
 			case R.id.cancel_button:
 				cancelButtonPressed(view);
+				break;
+			case R.id.edit_button:
+				startActivity(new Intent(getActivity(), MediaFoldersSelectionActivity.class));
 				break;
 			case R.id.media_scan_group_albums:
 			case R.id.media_scan_force_bastp:

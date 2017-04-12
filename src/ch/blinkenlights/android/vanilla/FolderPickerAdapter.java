@@ -30,9 +30,18 @@ import android.widget.ArrayAdapter;
 import android.graphics.drawable.Drawable;
 
 public class FolderPickerAdapter
-	extends ArrayAdapter<String>
+	extends ArrayAdapter<FolderPickerAdapter.Item>
 {
-	
+
+	public static class Item {
+		String name;
+		int color;
+		public Item(String name, int color) {
+			this.name = name;
+			this.color = color;
+		}
+	}
+
 	private final LayoutInflater mInflater;
 
 	public FolderPickerAdapter(Context context, int resource) {
@@ -54,8 +63,9 @@ public class FolderPickerAdapter
 			row = (DraggableRow)convertView;
 		}
 
-		String label = getItem(pos);
-		row.getTextView().setText(label);
+		Item item = (Item)getItem(pos);
+		row.getTextView().setText(item.name);
+		row.setBackgroundColor(item.color);
 		return row;
 	}
 
