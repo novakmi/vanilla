@@ -66,6 +66,10 @@ public class PreferencesMediaLibrary extends Fragment implements View.OnClickLis
 	 */
 	private TextView mStatsPlaytime;
 	/**
+	 * A list of scanned media directories
+	 */
+	private TextView mMediaDirectories;
+	/**
 	 * Checkbox for full scan
 	 */
 	private CheckBox mFullScanCheck;
@@ -101,6 +105,7 @@ public class PreferencesMediaLibrary extends Fragment implements View.OnClickLis
 		mProgressBar = (ProgressBar)view.findViewById(R.id.media_stats_progress_bar);
 		mStatsTracks = (TextView)view.findViewById(R.id.media_stats_tracks);
 		mStatsPlaytime = (TextView)view.findViewById(R.id.media_stats_playtime);
+		mMediaDirectories = (TextView)view.findViewById(R.id.media_directories);
 		mFullScanCheck = (CheckBox)view.findViewById(R.id.media_scan_full);
 		mDropDbCheck = (CheckBox)view.findViewById(R.id.media_scan_drop_db);
 		mGroupAlbumsCheck = (CheckBox)view.findViewById(R.id.media_scan_group_albums);
@@ -212,6 +217,16 @@ public class PreferencesMediaLibrary extends Fragment implements View.OnClickLis
 
 		mGroupAlbumsCheck.setChecked(prefs.groupAlbumsByFolder);
 		mForceBastpCheck.setChecked(prefs.forceBastp);
+
+		String hack = "";
+		for (String path : prefs.mediaFolders) {
+			hack += "✔ " + path + " (xxx files)\n";
+		}
+		for (String path : prefs.blacklistedFolders) {
+			hack += "✘ " + path + "\n";
+		}
+		mMediaDirectories.setText(hack);
+
 	}
 
 	/**

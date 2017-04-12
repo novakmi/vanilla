@@ -319,6 +319,8 @@ THE SOFTWARE.
 	<string name="no_receiving_apps">No receiving apps found for this media type!</string>
 
 	<string name="media_library">Media library</string>
+	<string name="media_folders_header">Indexed directories</string>
+	<string name="media_edit_folders">Edit</string>
 	<string name="media_scan_header">Media scanner</string>
 	<string name="media_scan_full">Scan full filesystem (Slow)</string>
 	<string name="media_scan_drop_db">Flush media database (Dangerzone!)</string>
