@@ -21,6 +21,8 @@ import java.util.Arrays;
 import java.util.ArrayList;
 import java.io.File;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
 import android.view.MenuItem;
@@ -81,7 +83,7 @@ public abstract class FolderPickerActivity extends Activity
 
 		mSaveButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				onFolderSelected(mCurrentPath);
+				onFolderPicked(mCurrentPath, mIncludedDirs, mExcludedDirs);
 			}});
 		// init defaults
 		enableTritasticSelect(false, null, null);
@@ -91,16 +93,28 @@ public abstract class FolderPickerActivity extends Activity
 	 * Called after a folder was selected
 	 *
 	 * @param directory the selected directory
+	 * @param included unique list of included directories in tristastic mode
+	 * @param excluded unique list of excluded directories in triatastic mode
 	 */
-	public abstract void onFolderSelected(File directory);
+	public abstract void onFolderPicked(File directory, ArrayList<String> included, ArrayList<String> excluded);
 
+	/**
+	 * Enables tritastic selection, that is: user can select each
+	 * directory to be in included, excluded or neutral state.
+	 *
+	 * @param enabled enables or disables this feature
+	 * @param included initial list of included dirs
+	 * @param excluded initial list of excluded dirs
+	 */
 	public void enableTritasticSelect(boolean enabled, ArrayList<String> included, ArrayList<String> excluded) {
 		mTritastic = enabled;
-		mIncludedDirs = included;
-		mExcludedDirs = excluded;
-
+		mIncludedDirs = (enabled ? included : null);
+		mExcludedDirs = (enabled ? excluded : null);
 		mListView.setOnItemLongClickListener(enabled ? this : null);
 		mSaveButton.setText(enabled ? R.string.save : R.string.select);
+
+		if (enabled)
+			Toast.makeText(this, R.string.hint_long_press_to_select_item, Toast.LENGTH_SHORT).show();
 	}
 
 	/**
@@ -110,7 +124,7 @@ public abstract class FolderPickerActivity extends Activity
 	 */
 	void setCurrentDirectory(File directory) {
 		mCurrentPath = directory;
-		refreshDirectoryList();
+		refreshDirectoryList(true);
 	}
 
 	/**
@@ -120,7 +134,7 @@ public abstract class FolderPickerActivity extends Activity
 	@Override
 	public void onResume() {
 		super.onResume();
-		refreshDirectoryList();
+		refreshDirectoryList(false);
 	}
 	
 	/**
@@ -161,20 +175,55 @@ public abstract class FolderPickerActivity extends Activity
 			setCurrentDirectory(newPath);
 	}
 
+	/**
+	 * Called on long-click on a row
+	 */
 	@Override
 	public boolean onItemLongClick(AdapterView<?> parent, View view, int pos, long id) {
+		FolderPickerAdapter.Item item = mListAdapter.getItem(pos);
+
+		if (item.file == null)
+			return false;
+
+		final String path = item.file.getAbsolutePath();
+		final CharSequence[] options = new CharSequence[]{
+			getResources().getString(R.string.folder_include),
+			getResources().getString(R.string.folder_exclude),
+			getResources().getString(R.string.folder_neutral)
+		};
+
+		AlertDialog.Builder builder = new AlertDialog.Builder(this)
+			.setTitle(item.name)
+			.setItems(options,
+				new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int which) {
+						mIncludedDirs.remove(path);
+						mExcludedDirs.remove(path);
+						switch (which) {
+							case 0:
+								mIncludedDirs.add(path);
+								break;
+							case 1:
+								mExcludedDirs.add(path);
+								break;
+							default:
+						}
+						refreshDirectoryList(false);
+					}
+				});
+		builder.create().show();
 		return true;
 	}
 
 	/**
 	 * display mCurrentPath in the dialog
 	 */
-	private void refreshDirectoryList() {
+	private void refreshDirectoryList(boolean scroll) {
 		File path = mCurrentPath;
 		File[]dirs = path.listFiles();
 		
 		mListAdapter.clear();
-		mListAdapter.add(new FolderPickerAdapter.Item("../", 0));
+		mListAdapter.add(new FolderPickerAdapter.Item("../", null, 0));
 		
 		if(dirs != null) {
 			Arrays.sort(dirs);
@@ -187,7 +236,7 @@ public abstract class FolderPickerActivity extends Activity
 						if (mExcludedDirs.contains(fentry.getAbsolutePath()))
 							color = 0xffce88ce;
 					}
-					FolderPickerAdapter.Item item = new FolderPickerAdapter.Item(fentry.getName(), color);
+					FolderPickerAdapter.Item item = new FolderPickerAdapter.Item(fentry.getName(), fentry, color);
 					mListAdapter.add(item);
 				}
 			}
@@ -196,7 +245,8 @@ public abstract class FolderPickerActivity extends Activity
 			Toast.makeText(this, "Failed to display " + path.getAbsolutePath(), Toast.LENGTH_SHORT).show();
 		}
 		mPathDisplay.setText(path.getAbsolutePath());
-		mListView.setSelectionFromTop(0, 0);
+		if (scroll)
+			mListView.setSelectionFromTop(0, 0);
 	}
 	
 }

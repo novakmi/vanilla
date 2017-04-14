@@ -29,15 +29,19 @@ import android.widget.TextView;
 import android.widget.ArrayAdapter;
 import android.graphics.drawable.Drawable;
 
+import java.io.File;
+
 public class FolderPickerAdapter
 	extends ArrayAdapter<FolderPickerAdapter.Item>
 {
 
 	public static class Item {
 		String name;
+		File file;
 		int color;
-		public Item(String name, int color) {
+		public Item(String name, File file, int color) {
 			this.name = name;
+			this.file = file;
 			this.color = color;
 		}
 	}

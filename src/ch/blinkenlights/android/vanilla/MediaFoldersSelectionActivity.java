@@ -24,6 +24,7 @@ import android.os.Bundle;
 import android.content.SharedPreferences;
 
 import java.io.File;
+import java.util.ArrayList;
 
 public class MediaFoldersSelectionActivity extends FolderPickerActivity {
 
@@ -44,7 +45,12 @@ public class MediaFoldersSelectionActivity extends FolderPickerActivity {
 
 
 	@Override
-	public void onFolderSelected(File directory) {
+	public void onFolderPicked(File directory, ArrayList<String> included, ArrayList<String> excluded) {
+		MediaLibrary.Preferences prefs = MediaLibrary.getPreferences(this);
+		prefs.mediaFolders = included;
+		prefs.blacklistedFolders = excluded;
+		MediaLibrary.setPreferences(this, prefs);
+		finish();
 	}
 
 }
