@@ -70,7 +70,7 @@ public abstract class FolderPickerActivity extends Activity
 		ThemeHelper.setTheme(this, R.style.BackActionBar);
 		super.onCreate(savedInstanceState);
 
-		setContentView(R.layout.filebrowser_content);
+		setContentView(R.layout.folderpicker_content);
 
 		mCurrentPath = new File("/");
 		mListAdapter = new FolderPickerAdapter(this, 0);
