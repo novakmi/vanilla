@@ -60,9 +60,18 @@ public abstract class FolderPickerActivity extends Activity
 	 * The array adapter of our listview
 	 */
 	private FolderPickerAdapter mListAdapter;
-
+	/**
+	 * True if folder-tri-state selection mode
+	 * is enabled
+	 */
 	private boolean mTritastic;
+	/**
+	 * List of included dirs in tristate mode
+	 */
 	private ArrayList<String> mIncludedDirs;
+	/**
+	 * List of excluded dirs in tristate mode
+	 */
 	private ArrayList<String> mExcludedDirs;
 
 	@Override  

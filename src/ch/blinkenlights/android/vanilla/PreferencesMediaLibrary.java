@@ -237,14 +237,14 @@ public class PreferencesMediaLibrary extends Fragment implements View.OnClickLis
 		mGroupAlbumsCheck.setChecked(prefs.groupAlbumsByFolder);
 		mForceBastpCheck.setChecked(prefs.forceBastp);
 
-		String hack = "";
+		String txt = "";
 		for (String path : prefs.mediaFolders) {
-			hack += "✔ " + path + "\n";
+			txt += "✔ " + path + "\n";
 		}
 		for (String path : prefs.blacklistedFolders) {
-			hack += "✘ " + path + "\n";
+			txt += "✘ " + path + "\n";
 		}
-		mMediaDirectories.setText(hack);
+		mMediaDirectories.setText(txt);
 
 	}
 

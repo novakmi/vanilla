@@ -134,13 +134,11 @@ public class MediaLibrary  {
 			if (prefs == null)
 				prefs = new MediaLibrary.Preferences();
 
-			if (prefs.mediaFolders == null || prefs.mediaFolders.size() == 0) {
+			if (prefs.mediaFolders == null || prefs.mediaFolders.size() == 0)
 				prefs.mediaFolders = discoverDefaultMediaPaths();
-			}
 
-			if (prefs.blacklistedFolders == null) { // we allow this to be empty, but it must not be null.
+			if (prefs.blacklistedFolders == null) // we allow this to be empty, but it must not be null.
 				prefs.blacklistedFolders = discoverDefaultBlacklistedPaths();
-			}
 
 			sPreferences = prefs; // cached for frequent access
 		}
@@ -194,7 +192,6 @@ public class MediaLibrary  {
 	public static void setPreferences(Context context, MediaLibrary.Preferences prefs) {
 		MediaLibraryBackend backend = getBackend(context);
 
-		Log.w("VanillaMusic", "---- save preferences!");
 		try (ObjectOutputStream oos = new ObjectOutputStream(context.openFileOutput(PREFERENCES_FILE, 0))) {
 			oos.writeObject(prefs);
 		} catch (Exception e) {
