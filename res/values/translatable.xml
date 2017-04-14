@@ -338,7 +338,7 @@ THE SOFTWARE.
 	<string name="media_scan_preferences_change_message">Changing this option will start a full rescan of your library. Would you like to continue?</string>
 
 	<!-- Folder selector -->
-	<string name="hint_long_press_to_select_item">Long press to select an item</string>
+	<string name="hint_long_press_to_modify_folder">Long press to modify folder options</string>
 	<string name="folder_include">Include</string>
 	<string name="folder_exclude">Exclude</string>
 	<string name="folder_neutral">Neutral</string>

@@ -114,7 +114,7 @@ public abstract class FolderPickerActivity extends Activity
 		mSaveButton.setText(enabled ? R.string.save : R.string.select);
 
 		if (enabled)
-			Toast.makeText(this, R.string.hint_long_press_to_select_item, Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, R.string.hint_long_press_to_modify_folder, Toast.LENGTH_SHORT).show();
 	}
 
 	/**
