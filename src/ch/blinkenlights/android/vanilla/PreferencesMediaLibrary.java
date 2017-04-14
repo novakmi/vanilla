@@ -239,7 +239,7 @@ public class PreferencesMediaLibrary extends Fragment implements View.OnClickLis
 
 		String hack = "";
 		for (String path : prefs.mediaFolders) {
-			hack += "✔ " + path + " (xxx files)\n";
+			hack += "✔ " + path + "\n";
 		}
 		for (String path : prefs.blacklistedFolders) {
 			hack += "✘ " + path + "\n";
