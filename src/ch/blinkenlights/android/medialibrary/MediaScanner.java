@@ -570,10 +570,24 @@ public class MediaScanner implements Handler.Callback {
 		if (sIgnoredFilenames.matcher(file.getName()).matches())
 			return true;
 
-		ArrayList<String> list = MediaLibrary.getPreferences(mContext).blacklistedFolders;
-		for (String path : list) {
-			if (file.getPath().startsWith(path))
-				return true;
+		ArrayList<String> whitelist = MediaLibrary.getPreferences(mContext).mediaFolders;
+		ArrayList<String> blacklist = MediaLibrary.getPreferences(mContext).blacklistedFolders;
+		for (String blPath : blacklist) {
+			if (file.getPath().startsWith(blPath)) {
+				boolean blacklisted = true;
+				// This item is in a blacklisted directory,
+				// check if it is also in a *whitelisted* dir
+				// with a longer prefix (= deeper down)
+				for (String wlPath : whitelist) {
+					if (wlPath.length() > blPath.length() &&
+					    file.getPath().startsWith(wlPath)) {
+						blacklisted = false;
+						break;
+					}
+				}
+				if (blacklisted)
+					return true;
+			}
 		}
 		return false;
 	}
