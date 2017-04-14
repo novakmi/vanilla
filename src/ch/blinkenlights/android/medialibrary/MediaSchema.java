@@ -289,7 +289,7 @@ public class MediaSchema {
 			dbh.execSQL(VIEW_CREATE_SONGS_ALBUMS_ARTISTS_HUGE);
 		}
 
-		if (oldVersion < 20170407) {
+		if (oldVersion >= 20170120 && oldVersion < 20170407) {
 			dbh.execSQL("DROP TABLE preferences");
 		}
 
