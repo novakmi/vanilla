@@ -232,9 +232,9 @@ public abstract class FolderPickerActivity extends Activity
 					int color = 0;
 					if (mTritastic) {
 						if (mIncludedDirs.contains(fentry.getAbsolutePath()))
-							color = 0xff88cece;
+							color = 0xff00c853;
 						if (mExcludedDirs.contains(fentry.getAbsolutePath()))
-							color = 0xffce88ce;
+							color = 0xffd50000;
 					}
 					FolderPickerAdapter.Item item = new FolderPickerAdapter.Item(fentry.getName(), fentry, color);
 					mListAdapter.add(item);

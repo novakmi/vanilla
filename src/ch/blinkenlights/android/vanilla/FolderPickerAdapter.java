@@ -60,7 +60,6 @@ public class FolderPickerAdapter
 		if (convertView == null) {
 			row = (DraggableRow)mInflater.inflate(R.layout.draggable_row, parent, false);
 			row.setupLayout(DraggableRow.LAYOUT_LISTVIEW);
-
 			row.getCoverView().setImageResource(R.drawable.folder);
 
 		} else {
@@ -69,7 +68,7 @@ public class FolderPickerAdapter
 
 		Item item = (Item)getItem(pos);
 		row.getTextView().setText(item.name);
-		row.setBackgroundColor(item.color);
+		row.getCoverView().setColorFilter(item.color);
 		return row;
 	}
 
