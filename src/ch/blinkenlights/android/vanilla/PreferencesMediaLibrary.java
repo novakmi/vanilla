@@ -94,6 +94,10 @@ public class PreferencesMediaLibrary extends Fragment implements View.OnClickLis
 	 * Set if we should start a full scan due to option changes
 	 */
 	private boolean mFullScanPending;
+	/**
+	 * Set if we are in the edit dialog
+	 */
+	private boolean mIsEditingDirectories;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -141,6 +145,9 @@ public class PreferencesMediaLibrary extends Fragment implements View.OnClickLis
 				});
 			}}), 0, 200);
 
+		if (mIsEditingDirectories)
+			mIsEditingDirectories = false;
+
 		updatePreferences(null);
 	}
 
@@ -152,7 +159,7 @@ public class PreferencesMediaLibrary extends Fragment implements View.OnClickLis
 			mTimer = null;
 		}
 
-		if (mFullScanPending) {
+		if (mFullScanPending && !mIsEditingDirectories) {
 			MediaLibrary.startLibraryScan(getActivity(), true, true);
 			mFullScanPending = false;
 		}
@@ -168,6 +175,8 @@ public class PreferencesMediaLibrary extends Fragment implements View.OnClickLis
 				cancelButtonPressed(view);
 				break;
 			case R.id.edit_button:
+				mIsEditingDirectories = true;
+				mFullScanPending = true;
 				startActivity(new Intent(getActivity(), MediaFoldersSelectionActivity.class));
 				break;
 			case R.id.media_scan_group_albums:
@@ -252,6 +261,7 @@ public class PreferencesMediaLibrary extends Fragment implements View.OnClickLis
 		mProgressBar.setProgress(progress.seen);
 
 		mStartButton.setEnabled(idle);
+		mEditButton.setEnabled(idle);
 		mDropDbCheck.setEnabled(idle);
 		mFullScanCheck.setEnabled(idle);
 		mForceBastpCheck.setEnabled(idle);
