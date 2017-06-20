@@ -853,6 +853,21 @@ public final class SongTimeline {
 	}
 
 	/**
+	 * Clear the song queue before.
+	 */
+	public void clearQueueBefore()
+	{
+		synchronized (this) {
+			saveActiveSongs();
+			if (mCurrentPos > 1 && mCurrentPos < mSongs.size())
+				mSongs.subList(0, mCurrentPos).clear();
+			broadcastChangedSongs();
+		}
+
+		changed();
+	}
+
+	/**
 	 * Empty the song queue (clear the whole queue).
 	 */
 	public void emptyQueue()

@@ -1826,6 +1826,14 @@ public final class PlaybackService extends Service
 	}
 
 	/**
+	 * Clear the song queue before.
+	 */
+	public void clearQueueBefore()
+	{
+		mTimeline.clearQueueBefore();
+	}
+
+	/**
 	 * Empty the song queue.
 	 */
 	public void emptyQueue()
